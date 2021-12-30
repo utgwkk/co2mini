@@ -20,7 +20,7 @@ fn main() {
     }
 
     let buf = &mut [0; 8];
-    let result = device_handle.read_bulk(rusb::constants::LIBUSB_ENDPOINT_IN | 0x1, buf, Duration::new(5, 0));
+    let result = device_handle.read_interrupt(rusb::constants::LIBUSB_ENDPOINT_IN | 0x1, buf, Duration::new(5, 0));
     if result.is_err() {
         return
     }
