@@ -19,6 +19,11 @@ fn main() {
         return
     }
     println!("{:?}", buf);
+    let sum = buf[0].wrapping_add(buf[1].wrapping_add(buf[2]));
+    if sum != buf[3] {
+        println!("invalid");
+        return
+    }
     println!("{} {}", tamb(*buf), cntr(*buf))
 }
 
