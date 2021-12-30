@@ -1,5 +1,11 @@
 use std::time::Duration;
 
+#[derive(Debug)]
+enum Item {
+    CntR,
+    Tamb,
+}
+
 fn main() {
     let vid = 0x04d9;
     let pid = 0xa052;
@@ -24,10 +30,22 @@ fn main() {
         println!("invalid");
         return
     }
-    println!("{} {}", tamb(*buf), cntr(*buf))
+    let item = item_of(*buf);
+    println!("{:?} {} {}", item, tamb(*buf), cntr(*buf))
 }
 
 // http://co2meters.com/Documentation/Other/AN_RAD_0301_USB_Communications_Revised8.pdf
+
+fn item_of(data: [u8; 8]) -> Item {
+    let item: i16 = data[0].into();
+    let diff_cntr = (0x50 - item).abs();
+    let diff_tamb = (0x42 - item).abs();
+    return if diff_cntr < diff_tamb {
+        Item::CntR
+    } else {
+        Item::Tamb
+    }
+}
 
 fn tamb(data: [u8; 8]) -> f32 {
     let msb: f32 = data[1].into();
