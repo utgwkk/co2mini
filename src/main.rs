@@ -30,6 +30,10 @@ fn main() {
         println!("invalid");
         return
     }
+    if buf[0] != 0x50 && buf[0] != 0x42 {
+        println!("invalid");
+        return
+    }
     let value: u32 = (u32::try_from(buf[1]).unwrap() << 8 | buf[2] as u32).into();
     let item = item_of(*buf);
     println!("{:?} {} {}", item, tamb(value), cntr(value))
