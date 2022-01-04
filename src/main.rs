@@ -25,12 +25,7 @@ fn main() {
         return
     }
     println!("{:?}", buf);
-    let sum = buf[0].wrapping_add(buf[1].wrapping_add(buf[2]));
-    if sum != buf[3] {
-        println!("invalid");
-        return
-    }
-    if buf[0] != 0x50 && buf[0] != 0x42 {
+    if !is_valid_data(buf) {
         println!("invalid");
         return
     }
@@ -50,6 +45,22 @@ fn item_of(data: [u8; 8]) -> Item {
     } else {
         Item::Tamb
     }
+}
+
+fn is_valid_data(data: &[u8; 8]) -> bool {
+    // checksum
+    let sum = data[0].wrapping_add(data[1].wrapping_add(data[2]));
+    if sum != data[3] {
+        return false
+    }
+
+    // item type
+    let item_type = data[0];
+    if item_type != 0x50 && item_type != 0x42 {
+        return false
+    }
+
+    return true
 }
 
 fn tamb(value: u32) -> f32 {
