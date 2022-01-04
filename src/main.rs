@@ -30,8 +30,9 @@ fn main() {
         println!("invalid");
         return
     }
+    let value: u32 = (u32::try_from(buf[1]).unwrap() << 8 | buf[2] as u32).into();
     let item = item_of(*buf);
-    println!("{:?} {} {}", item, tamb(*buf), cntr(*buf))
+    println!("{:?} {} {}", item, tamb(value), cntr(value))
 }
 
 // http://co2meters.com/Documentation/Other/AN_RAD_0301_USB_Communications_Revised8.pdf
@@ -47,14 +48,10 @@ fn item_of(data: [u8; 8]) -> Item {
     }
 }
 
-fn tamb(data: [u8; 8]) -> f32 {
-    let msb: f32 = data[1].into();
-    let lsb: f32 = data[2].into();
-    return msb + lsb * 0.01
+fn tamb(value: u32) -> f32 {
+    return (value as f32) / 16.0 - 273.1
 }
 
-fn cntr(data: [u8; 8]) -> u16 {
-    let msb: u16 = data[1].into();
-    let lsb: u16 = data[2].into();
-    return msb * 100 + lsb;
+fn cntr(value: u32) -> u16 {
+    return value as u16
 }
